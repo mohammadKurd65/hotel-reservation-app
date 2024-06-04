@@ -1,5 +1,5 @@
-import { id } from "date-fns/locale";
-import useFetch from "../../../hooks/useFeetch"
+
+import useFetch from "../../../hooks/useFetch"
 
 
 function LocationList() {
