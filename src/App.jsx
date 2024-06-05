@@ -8,6 +8,7 @@ import AppLayout from "./components/AppLayout/AppLayout";
 import Hotels from "./components/Hotels/Hotels";
 import HotelsProvider from "./components/context/HotelsProvider";
 import SingleHotel from "./components/SingelHotel/SingleHotel";
+import Bookmark from "./components/BookMark/Bookmark";
 
 function App() {
   return <div>
@@ -19,8 +20,8 @@ function App() {
       <Route path="/hotels" element={<AppLayout/>}>
         <Route index element={<Hotels/>}/>
         <Route path=":id" element={<SingleHotel/>}/>
-
       </Route>
+      <Route path="/bookmark" element={<Bookmark/>}/>
     </Routes>
   </HotelsProvider>
   </div>
