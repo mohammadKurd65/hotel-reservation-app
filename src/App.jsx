@@ -25,7 +25,8 @@ function App() {
       </Route>
       <Route path="/bookmark" element={<BookmarkLayout/>}>
       <Route index element={<div>boolmarl List</div>}/>
-      <Route path="/add" element={< div>add new bookmarl</div>}/>
+      <Route path=":id" element={<div>single bookmark</div>}/>
+      <Route path="add" element={< div>add new bookmarl</div>}/>
       </Route>
     </Routes>
   </HotelsProvider>
