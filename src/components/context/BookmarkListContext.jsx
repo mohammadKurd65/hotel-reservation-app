@@ -14,6 +14,7 @@ const{data:bookmarks, isLoading}= useFetch(`${Base_url}/bookmarks`
 
 async function getBookmark(id){
     setIsLoadingCurrentBookmark(true);
+    setCurrentBookmark(null)
 try {
     const{data} = await axios.get(`${Base_url}/bookmarks/${id}`);
     setCurrentBookmark(data);
