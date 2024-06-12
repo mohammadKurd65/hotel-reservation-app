@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,25 +8,66 @@ const Base_url = "http://localhost:5000"
 
 function BookmarkListProvider({children}) {
     const[currentBookmark, setCurrentBookmark] = useState(null);
-    const [isLoadingCurrentBookmark, setIsLoadingCurrentBookmark] = useState(false);
-const{data:bookmarks, isLoading}= useFetch(`${Base_url}/bookmarks`
-);
+    const[bookmarks, setBookmarks] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+// const{data:bookmarks, isLoading}= useFetch(`${Base_url}/bookmarks`
+// );
+
+useEffect(()=>{
+    async function fetchBookmarkList(){
+        setIsLoading(true);
+    try {
+        const{data} = await axios.get(`${Base_url}/bookmarks`);
+        setBookmarks(data);
+    } catch (error) {
+        toast.error(error.message)
+    } finally{
+        setIsLoading(false);
+    }
+    }
+
+    fetchBookmarkList();
+}, [])
+
 
 async function getBookmark(id){
-    setIsLoadingCurrentBookmark(true);
+    setIsLoading(true);
     setCurrentBookmark(null)
 try {
     const{data} = await axios.get(`${Base_url}/bookmarks/${id}`);
     setCurrentBookmark(data);
-    setIsLoadingCurrentBookmark(false)
 } catch (error) {
     toast.error(error.message)
-    setIsLoadingCurrentBookmark(false)
+} finally{
+    setIsLoading(false)
 }
 }
 
+
+async function createBookmark(newBookmark){
+    setIsLoading(true);
+    
+try {
+    const{data} = await axios.post(`${Base_url}/bookmarks/`, newBookmark);
+    setCurrentBookmark(data);
+    setBookmarks((prev)=> [...prev, data]);
+} catch (error) {
+    toast.error(error.message)
+} finally{
+    setIsLoading(false)
+}
+}
+
+
 return (
-    <BookmarkContext.Provider value={{isLoading,bookmarks, currentBookmark, getBookmark, isLoadingCurrentBookmark}}>
+    <BookmarkContext.Provider 
+    value={{
+        isLoading,
+        bookmarks, 
+        currentBookmark, 
+        getBookmark, 
+        createBookmark,
+        }}>
         {children}
     </BookmarkContext.Provider>
 )

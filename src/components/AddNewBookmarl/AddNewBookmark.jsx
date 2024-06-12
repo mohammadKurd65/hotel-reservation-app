@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../Loader/Loader";
 import ReactCountryFlag from "react-country-flag";
+import { useBookmark } from "../context/BookmarkListContext";
 
-function getFlagEmoji(countryCode) {
-    const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map(char =>  127397 + char.charCodeAt());
-    return String.fromCodePoint(...codePoints);
-}
+// function getFlagEmoji(countryCode) {
+//     const codePoints = countryCode
+//     .toUpperCase()
+//     .split('')
+//     .map(char =>  127397 + char.charCodeAt());
+//     return String.fromCodePoint(...codePoints);
+// }
 
 const BASE_GEOCODING_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 
@@ -23,7 +24,8 @@ function AddNewBookmark() {
     const[country, setCountry] = useState();
     const[countryCode, setCountryCode] = useState("");
     const[isLoadingGeoCoding, setIsLoadingGeoCoding] = useState(false);
-    const[geoCodingError, setGeoCodingError] = useState(null)
+    const[geoCodingError, setGeoCodingError] = useState(null);
+    const {createBookmark} = useBookmark()
 
     // 
 
@@ -51,12 +53,28 @@ function AddNewBookmark() {
         }
     }, [lat, lng])
 
+    const handelSubmit = async (e)=>{
+        e.preventDefault();
+        if(!cityName || !country) return;
+
+        const newBookmark = {
+            cityName,
+            country,
+            countryCode,
+            latitude: lat,
+            longitude: lng,
+            host_location: cityName + "" + country,
+        };
+        await createBookmark(newBookmark);
+        navigate("/bookmark");
+    }
+
     if(isLoadingGeoCoding) return <Loader/>
     if(geoCodingError) return <p>{geoCodingError}</p>
 return (
     <div>
         <h2>Bookmark New Location</h2>
-        <form  className="form">
+        <form  className="form" onSubmit={handelSubmit}>
             <div className="formControl">
                 <label htmlFor="cityName">CityName</label>
                 <input
@@ -74,7 +92,7 @@ return (
                 type="text" 
                 name="country" 
                 id="country"/>
-                <ReactCountryFlag svg countryCode={country} className="flag"/>
+                <ReactCountryFlag svg countryCode={countryCode} className="flag"/>
                 <span className="flag"></span>
             </div>
             <div className="buttons">
