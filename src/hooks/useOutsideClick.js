@@ -1,16 +1,20 @@
 import { useEffect } from "react";
 
-export default function useOusideClick(ref,excepyionId, cb){
-    useEffect(()=>{
-        function handlerOutsideClick(event){
-if(ref.current && !ref.current.contains(event.target) && event.target.id !== excepyionId){
-cb()
-}
-        }
-        document.addEventListener("mousedown", handlerOutsideClick)
-        return()=>{
-            document.removeEventListener("mousedown", handlerOutsideClick)
-        }
-    },[ref, cb, excepyionId])
+export default function useOutsideClick(ref, exceptionId, cb) {
+  useEffect(() => {
+    function handleOutsideClick(event) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        event.target.id !== exceptionId
+      ) {
+        cb();
+      }
+    }
+    document.addEventListener("mousedown", handleOutsideClick);
 
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [ref, cb, exceptionId]);
 }

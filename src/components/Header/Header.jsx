@@ -114,7 +114,6 @@ function Header() {
         </div>
       </div>
       <User />
-      
     </div>
   );
 }
